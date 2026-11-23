@@ -261,6 +261,15 @@ router.root.dismissModals(from: 1) // truncate the modal chain
 router.root.dismissAll()          // close every modal in the chain
 ```
 
+### 9. Customization
+
+- `RoutePresentation.custom(_:)` names presentations defined by the app, e.g. a compact sheet.
+- `RouterHostConfiguration`, set with `.environment(\.routerHostConfiguration, …)`, decides which modal presentations
+  cover the full screen and wraps the screen of every route, e.g. to style its navigation bar.
+- `RouterHost(showingFirstRouteOf:)` shows the first route of a node as the root of its stack instead of pushing it.
+- `RouterNode.activeNode` is the innermost context along the routing chain, the one the user currently sees.
+- Opening a program through a selection resets the selected branch, just like the root is reset.
+
 ---
 
 ## Demo
