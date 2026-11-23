@@ -37,6 +37,9 @@ public final class RouterNode {
     /// The innermost context along the routing chain, whose modal slot is the one still free.
     private var deepestNode: RouterNode { routingChild?.deepestNode ?? self }
     
+    /// The innermost context along the routing chain, which is the one currently shown to the user.
+    public var activeNode: RouterNode { deepestNode }
+    
     private var routingChild: RouterNode? {
         modal?.child ?? selection.flatMap { branches[$0] }
     }
@@ -72,10 +75,12 @@ public final class RouterNode {
                 switch presentation {
                 case .push:
                     break
-                case .sheet, .fullScreenCover:
+                case .sheet, .fullScreenCover, .custom:
                     cursor = cursor.deepestNode
                 case .selection:
                     cursor = cursor.branch(for: route)
+                    cursor.dismissAll()
+                    cursor.popToRoot()
                 }
             case .reject(let error):
                 return .failed(error)
@@ -150,7 +155,7 @@ public final class RouterNode {
         switch presentation {
         case .push:
             path.append(route)
-        case .sheet, .fullScreenCover:
+        case .sheet, .fullScreenCover, .custom:
             guard !modalStack.contains(where: { $0.route == route }) else { return .failed(.presentationBusy) }
             let node = deepestNode
             node.modal = .init(route: route, presentation: presentation, child: node.makeChild(for: route))

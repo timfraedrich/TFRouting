@@ -82,6 +82,7 @@ struct DemoStateInspector: View {
         case .sheet: "[sheet]"
         case .fullScreenCover: "[cover]"
         case .selection: "[selection]"
+        case .custom(let custom): "[\(custom.rawValue)]"
         }
     }
 }
